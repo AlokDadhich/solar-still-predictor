@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solar Still Output Predictor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: #0f0f11;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header {
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0f0f11;
+            border-bottom: 1px solid #222;
+        }
+
+        .header .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #cfcfff;
+        }
+
+        .header .button {
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .date-display {
+            margin-top: 1.5rem;
+            font-size: 1.4rem;
+            color: #cfcfff;
+        }
+
+        .container {
+            margin-top: 2.5rem;
+            background-color: #1c1c1f;
+            padding: 3rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            min-height: 500px;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+        }
+
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            background-color: #2e2e33;
+            color: white;
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-top: -0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .predict-button {
+            width: 100%;
+            background: linear-gradient(90deg, #4f46e5, #a855f7);
+            padding: 1rem;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+        }
+
+        .output {
+            margin-top: 2rem;
+            color: #00ff84;
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1rem;
+            color: #999;
+        }
+
+        .footer a {
+            color: #ec4899;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">SolarStill <span style="color:#6366f1">AI</span></div>
+        <button class="button">Create Account</button>
+    </div>
+
+    <div class="date-display">
+        Selected Date: <span id="date-display">Not selected</span>
+    </div>
+
+    <div class="container">
+        <form method="POST">
+            <label for="date">Date</label>
+            <input type="date" name="date" id="date-input" required>
+            <div class="hint">Radiation will be filled automatically</div>
+
+            {% if radiation is not none %}
+            <label for="radiation">Average Radiation (W/m²)</label>
+            <input type="number" name="radiation" value="{{ radiation }}" readonly>
+            {% endif %}
+
+            <label for="water">Input Water (Liters)</label>
+            <input type="number" step="0.1" name="water" min="5" max="7" required>
+            <div class="hint">Enter a value between 5 and 7 liters</div>
+
+            <button type="submit" class="predict-button">Predict</button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="output">
+            Predicted Output for {{ date }} with Radiation = {{ radiation }} W/m²<br>
+            and Water = {{ water }} L is:<br>
+            <strong>{{ prediction }} Liters</strong>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        Developed By Students at <a href="https://vit.edu">Vishwakarma Institute of Technology</a>
+    </div>
+
+    <script>
+        const dateInput = document.getElementById('date-input');
+        const dateDisplay = document.getElementById('date-display');
+
+        dateInput.addEventListener('change', function () {
+            dateDisplay.textContent = this.value;
+        });
+    </script>
+</body>
+</html>
